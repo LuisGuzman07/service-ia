@@ -1,8 +1,7 @@
 from fastapi import APIRouter
 
-from app.core.config import settings
 from app.models.flow_models import GenerateFlowRequest, GenerateFlowResponse
-from app.services.gemini_service import GeminiFlowGenerator
+from app.services.factory import get_generator
 
 
 router = APIRouter(prefix="/api/v1/ai", tags=["AI Flow Generation"])
@@ -10,10 +9,11 @@ router = APIRouter(prefix="/api/v1/ai", tags=["AI Flow Generation"])
 
 @router.post("/generate-flow", response_model=GenerateFlowResponse)
 def generate_flow(request: GenerateFlowRequest) -> GenerateFlowResponse:
-    generator = GeminiFlowGenerator()
+    generator = get_generator()
     draft, summary = generator.generate_flow(request)
     return GenerateFlowResponse(
         draft=draft,
         summary=summary,
-        model=settings.gemini_model
+        model=generator.model_name
     )
+

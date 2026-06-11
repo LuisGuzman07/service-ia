@@ -148,6 +148,8 @@ class GeminiFlowGenerator:
         if not settings.gemini_api_key:
             raise HTTPException(status_code=500, detail="GEMINI_API_KEY no configurada en ia-service")
         self.client = genai.Client(api_key=settings.gemini_api_key)
+        self.model_name = settings.gemini_model
+
 
     def generate_flow(self, request: GenerateFlowRequest) -> tuple[SwimlaneDiagramState, str]:
         prompt = PROMPT_TEMPLATE.format(
